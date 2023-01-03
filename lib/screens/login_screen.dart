@@ -1,6 +1,9 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:project_devscore/responsive/mobile_screen_layout.dart';
+import 'package:project_devscore/responsive/responsive_layout.dart';
+import 'package:project_devscore/responsive/web_screen_layout.dart';
 import 'package:project_devscore/screens/signup_screen.dart';
 import 'package:project_devscore/services/auth_methods.dart';
 import 'package:project_devscore/utils/colors.dart';
@@ -33,9 +36,20 @@ class _LoginScreenState extends State<LoginScreen> {
     String result = await AuthMethods().LoginUser(
         email: _emailController.text, password: _passwordController.text);
 
-    if (result != 'success') {
+    if (result == 'success') {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: ((context) => const ResponsiveLayout(
+                mobileScreenLayout: MobileScreenLayout(),
+                webScreenLayout: WebScreenLayout(),
+              )),
+        ),
+      );
+    } else {
       showSnackBar(context, result.toString());
     }
+
     setState(() {
       _isLoading = false;
     });

@@ -4,6 +4,9 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:project_devscore/responsive/mobile_screen_layout.dart';
+import 'package:project_devscore/responsive/responsive_layout.dart';
+import 'package:project_devscore/responsive/web_screen_layout.dart';
 import 'package:project_devscore/services/auth_methods.dart';
 import 'package:project_devscore/utils/colors.dart';
 import 'package:project_devscore/utils/picking_image.dart';
@@ -57,7 +60,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
         _isLoading2 = false;
       });
 
-      if (result != 'success') {
+      if (result == 'success') {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: ((context) => const ResponsiveLayout(
+                  mobileScreenLayout: MobileScreenLayout(),
+                  webScreenLayout: WebScreenLayout(),
+                )),
+          ),
+        );
+      } else {
         showSnackBar(context, result.toString());
       }
     }
