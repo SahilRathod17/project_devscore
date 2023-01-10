@@ -1,10 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:project_devscore/model/user_model.dart';
 import 'package:project_devscore/providers/userdata_provider.dart';
+import 'package:project_devscore/screens/comment_screen.dart';
 import 'package:project_devscore/services/firestore_methods.dart';
 import 'package:project_devscore/utils/colors.dart';
 import 'package:project_devscore/widgets/like_animation.dart';
+import 'package:project_devscore/widgets/snackbar.dart';
 import 'package:provider/provider.dart';
 
 class PostCard extends StatefulWidget {
@@ -17,6 +20,27 @@ class PostCard extends StatefulWidget {
 
 class _PostCardState extends State<PostCard> {
   bool isLikeAnimating = false;
+  int noOfComments = 0;
+  @override
+  void initState() {
+    super.initState();
+    getComments();
+  }
+
+  void getComments() async {
+    try {
+      QuerySnapshot snap = await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(widget.snap['postID'])
+          .collection('comments')
+          .get();
+      noOfComments = snap.docs.length;
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     final User user =
@@ -70,7 +94,11 @@ class _PostCardState extends State<PostCard> {
                           ]
                               .map(
                                 (e) => InkWell(
-                                  onTap: () {},
+                                  onTap: () async {
+                                    FireStoreMethods()
+                                        .deletePost(widget.snap['postID']);
+                                    Navigator.of(context).pop();
+                                  },
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
                                       vertical: 12.0,
@@ -85,7 +113,7 @@ class _PostCardState extends State<PostCard> {
                       ),
                     );
                   },
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.more_vert,
                     color: Colors.white,
                   ),
@@ -160,7 +188,16 @@ class _PostCardState extends State<PostCard> {
                 ),
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: ((context) => CommentScreen(
+                            snap: widget.snap,
+                          )),
+                    ),
+                  );
+                },
                 icon: const Icon(
                   Icons.comment_outlined,
                 ),
@@ -210,7 +247,7 @@ class _PostCardState extends State<PostCard> {
                   ),
                   child: RichText(
                     text: TextSpan(
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: primaryColor,
                       ),
                       children: [
@@ -235,8 +272,8 @@ class _PostCardState extends State<PostCard> {
                     ),
                     child: Text(
                       // our comments will be in a sub collection so we cant show total numbers directly
-                      'View all 200 comments',
-                      style: TextStyle(
+                      'View all $noOfComments comments',
+                      style: const TextStyle(
                         color: secondaryColor,
                         fontSize: 16.0,
                       ),
@@ -250,7 +287,7 @@ class _PostCardState extends State<PostCard> {
                     DateFormat.yMMMd().format(
                       widget.snap['datePublished'].toDate(),
                     ),
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: secondaryColor,
                       fontSize: 16.0,
                     ),
