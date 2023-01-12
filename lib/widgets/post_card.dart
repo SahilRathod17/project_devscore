@@ -6,6 +6,7 @@ import 'package:project_devscore/providers/userdata_provider.dart';
 import 'package:project_devscore/screens/comment_screen.dart';
 import 'package:project_devscore/services/firestore_methods.dart';
 import 'package:project_devscore/utils/colors.dart';
+import 'package:project_devscore/utils/global_variables.dart';
 import 'package:project_devscore/widgets/like_animation.dart';
 import 'package:project_devscore/widgets/snackbar.dart';
 import 'package:provider/provider.dart';
@@ -45,8 +46,14 @@ class _PostCardState extends State<PostCard> {
   Widget build(BuildContext context) {
     final User user =
         Provider.of<UserDataProvider>(context, listen: false).getUserData;
+    final width = MediaQuery.of(context).size.width;
     return Container(
-      color: mobileBackgroundColor,
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: width > webScreenSize ? secondaryColor : mobileBackgroundColor,
+        ),
+        color: mobileBackgroundColor,
+      ),
       padding: const EdgeInsets.symmetric(
         vertical: 10.0,
       ),

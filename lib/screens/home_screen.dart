@@ -3,6 +3,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:project_devscore/screens/add_post_screen.dart';
 import 'package:project_devscore/utils/colors.dart';
+import 'package:project_devscore/utils/global_variables.dart';
 import 'package:project_devscore/widgets/post_card.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -15,41 +16,49 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: mobileBackgroundColor,
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.add_circle,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: ((context) => AddPostScreen()),
+      appBar: width > webScreenSize
+          ? null
+          : AppBar(
+              backgroundColor: width > webScreenSize
+                  ? webBackgroundColor
+                  : mobileBackgroundColor,
+              actions: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.add_circle,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: ((context) => AddPostScreen()),
+                      ),
+                    );
+                  },
                 ),
-              );
-            },
-          ),
-          IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                EvaIcons.messageSquare,
-                color: Colors.white,
-              ))
-        ],
-        title: const Text(
-          'DevsCore',
-          style: TextStyle(
-            fontFamily: 'kenia',
-            fontSize: 35.0,
-          ),
-        ),
-      ),
+                IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      EvaIcons.messageSquare,
+                      color: Colors.white,
+                    ))
+              ],
+              title: const Text(
+                'DevsCore',
+                style: TextStyle(
+                  fontFamily: 'kenia',
+                  fontSize: 35.0,
+                ),
+              ),
+            ),
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('posts').snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection('posts')
+            .orderBy('datePublished', descending: true)
+            .snapshots(),
         builder: (context,
             AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -65,9 +74,15 @@ class _HomeScreenState extends State<HomeScreen> {
               //  so if it's null docs.length (docs - give list of id means post ids )
               // get length so only that much will be appear
               itemCount: snapshot.data!.docs.length,
-              itemBuilder: ((context, index) => PostCard(
-                    // gonna grab only one doc at a time
-                    snap: snapshot.data!.docs[index].data(),
+              itemBuilder: ((context, index) => Container(
+                    margin: EdgeInsets.symmetric(
+                      horizontal: width > webScreenSize ? width * 0.3 : 0,
+                      vertical: width > webScreenSize ? 15 : 0,
+                    ),
+                    child: PostCard(
+                      // gonna grab only one doc at a time
+                      snap: snapshot.data!.docs[index].data(),
+                    ),
                   )),
             ),
           );

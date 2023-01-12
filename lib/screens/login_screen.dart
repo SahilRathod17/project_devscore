@@ -7,6 +7,7 @@ import 'package:project_devscore/responsive/web_screen_layout.dart';
 import 'package:project_devscore/screens/signup_screen.dart';
 import 'package:project_devscore/services/auth_methods.dart';
 import 'package:project_devscore/utils/colors.dart';
+import 'package:project_devscore/utils/global_variables.dart';
 import 'package:project_devscore/widgets/policy_text.dart';
 import 'package:project_devscore/widgets/snackbar.dart';
 import 'package:project_devscore/widgets/text_field_input.dart';
@@ -62,9 +63,10 @@ class _LoginScreenState extends State<LoginScreen> {
       body: SafeArea(
         child: Container(
           width: double.infinity,
-          padding: EdgeInsets.symmetric(
-            horizontal: 32.0,
-          ),
+          padding: MediaQuery.of(context).size.width > webScreenSize
+              ? EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width / 3)
+              : const EdgeInsets.symmetric(horizontal: 32.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [

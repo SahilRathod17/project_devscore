@@ -102,4 +102,39 @@ class FireStoreMethods {
       print(e.toString());
     }
   }
+
+  Future<void> FollowUsers(String uid, String followID) async {
+    try {
+      // getting current users following list
+      DocumentSnapshot snap =
+          await _firestore.collection('users').doc(uid).get();
+      // storing that list in our local List
+      List following = (snap.data()! as dynamic)['following'];
+      // now if some users id is available in that list means user follows that user
+      // so remove the user form there , if current users already follows that user
+      if (following.contains(followID)) {
+        // think as uid is you and followID is second person
+        // from that person's followers list you will be removed
+        await _firestore.collection('users').doc(followID).update({
+          'followers': FieldValue.arrayRemove([uid]),
+        });
+
+        // remove that person from your following list
+        await _firestore.collection('users').doc(uid).update({
+          'following': FieldValue.arrayRemove([followID]),
+        });
+      } else {
+        // your id added to that person's followers list
+        await _firestore.collection('users').doc(followID).update({
+          'followers': FieldValue.arrayUnion([uid]),
+        });
+        // that person's id added to your following list
+        await _firestore.collection('users').doc(uid).update({
+          'following': FieldValue.arrayUnion([followID]),
+        });
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
 }

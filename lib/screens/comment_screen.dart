@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:project_devscore/model/user_model.dart';
 import 'package:project_devscore/providers/userdata_provider.dart';
+import 'package:project_devscore/screens/profile_screen.dart';
 import 'package:project_devscore/services/firestore_methods.dart';
 import 'package:project_devscore/utils/colors.dart';
 import 'package:project_devscore/widgets/comment_card.dart';
@@ -52,8 +53,19 @@ class _CommentScreenState extends State<CommentScreen> {
           }
           return ListView.builder(
             itemCount: (snapshot.data! as dynamic).docs.length,
-            itemBuilder: ((context, index) => CommentCard(
-                  snap: (snapshot.data! as dynamic).docs[index].data(),
+            itemBuilder: ((context, index) => InkWell(
+                  onTap: () {
+                    if (user.uid !=
+                        (snapshot.data! as dynamic).docs[index]['uid']) {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: ((context) => ProfileScreen(
+                              uid: (snapshot.data! as dynamic).docs[index]
+                                  ['uid']))));
+                    }
+                  },
+                  child: CommentCard(
+                    snap: (snapshot.data! as dynamic).docs[index].data(),
+                  ),
                 )),
           );
         },
