@@ -1,5 +1,8 @@
+// ignore_for_file: avoid_dynamic_calls
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:project_devscore/utils/colors.dart';
 
 class CommentCard extends StatefulWidget {
   final snap;
@@ -36,11 +39,14 @@ class _CommentCardState extends State<CommentCard> {
                           text: widget.snap['name'],
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
+                            color: blackColor,
                           ),
                         ),
                         TextSpan(
-                          text: "  ${widget.snap['text']}",
-                        ),
+                            text: "  ${widget.snap['text']}",
+                            style: const TextStyle(
+                              color: blackColor,
+                            )),
                       ],
                     ),
                   ),

@@ -1,0 +1,8 @@
+// for using rest extension 
+GET https://api.github.com/user/starred?page=1
+Authorization: bearer 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
+
+// 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
+
+
+

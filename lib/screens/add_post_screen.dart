@@ -67,7 +67,11 @@ class _AddPostScreenState extends State<AddPostScreen> {
       context: context,
       builder: ((context) {
         return SimpleDialog(
-          title: const Text('Post something'),
+          title: const Text(
+            'Post something',
+            style: TextStyle(
+                color: Colors.blueAccent, fontWeight: FontWeight.bold),
+          ),
           children: [
             SimpleDialogOption(
               padding: const EdgeInsets.all(20.0),
@@ -119,6 +123,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                 icon: const Icon(
                   Icons.upload,
                   size: 50.0,
+                  color: blueColor,
                 ),
                 onPressed: () {
                   _selectImage(context);
@@ -128,10 +133,17 @@ class _AddPostScreenState extends State<AddPostScreen> {
           )
         : Scaffold(
             appBar: AppBar(
-              backgroundColor: mobileBackgroundColor,
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              iconTheme: const IconThemeData(color: blackColor),
+              backgroundColor: primaryColor,
               title: const Text(
                 'Post to profile',
-                style: TextStyle(fontFamily: 'pacifico'),
+                style: TextStyle(color: blackColor, fontFamily: 'pacifico'),
               ),
               centerTitle: true,
               actions: [

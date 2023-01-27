@@ -42,26 +42,31 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
     // ignore: prefer_const_constructors
     return Scaffold(
       body: PageView(
-        physics: const NeverScrollableScrollPhysics(),
+        // physics: const NeverScrollableScrollPhysics(),
         controller: pageController,
         onPageChanged: onPageChanged,
         children: homeScreenItems,
       ),
       bottomNavigationBar: CupertinoTabBar(
-        backgroundColor: mobileBackgroundColor,
+        border: const Border(
+          bottom: BorderSide(
+            color: Colors.transparent,
+          ),
+        ),
+        backgroundColor: primaryColor,
         items: [
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.home,
-              color: (_PageIndex == 0) ? primaryColor : secondaryColor,
+              EvaIcons.home,
+              color: (_PageIndex == 0) ? blackColor : secondaryColor,
             ),
             label: '',
-            backgroundColor: primaryColor,
+            backgroundColor: Colors.transparent,
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.search_rounded,
-              color: (_PageIndex == 1) ? primaryColor : secondaryColor,
+              EvaIcons.search,
+              color: (_PageIndex == 1) ? blackColor : secondaryColor,
             ),
             label: '',
             backgroundColor: primaryColor,
@@ -69,23 +74,15 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
           BottomNavigationBarItem(
             icon: Icon(
               EvaIcons.github,
-              color: (_PageIndex == 2) ? primaryColor : secondaryColor,
+              color: (_PageIndex == 2) ? blackColor : secondaryColor,
             ),
             label: '',
             backgroundColor: primaryColor,
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              EvaIcons.heart,
-              color: (_PageIndex == 3) ? primaryColor : secondaryColor,
-            ),
-            label: '',
-            backgroundColor: primaryColor,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              EvaIcons.person,
-              color: (_PageIndex == 4) ? primaryColor : secondaryColor,
+              Icons.groups,
+              color: (_PageIndex == 3) ? blackColor : secondaryColor,
             ),
             label: '',
             backgroundColor: primaryColor,

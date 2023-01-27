@@ -31,11 +31,20 @@ class _CommentScreenState extends State<CommentScreen> {
         Provider.of<UserDataProvider>(context, listen: false).getUserData;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: mobileBackgroundColor,
+        leading: IconButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            icon: const Icon(Icons.arrow_back_ios_new_rounded)),
+        iconTheme: const IconThemeData(
+          color: blackColor,
+        ),
+        backgroundColor: primaryColor,
         centerTitle: true,
         title: const Text(
           'Comments',
-          style: TextStyle(fontFamily: 'Festive', fontSize: 35.0),
+          style: TextStyle(
+              fontFamily: 'Festive', fontSize: 35.0, color: blackColor),
         ),
       ),
       body: StreamBuilder(
@@ -90,7 +99,7 @@ class _CommentScreenState extends State<CommentScreen> {
                   padding: const EdgeInsets.only(left: 16.0, right: 8.0),
                   child: TextField(
                     controller: _commentController,
-                    cursorColor: Colors.white,
+                    cursorColor: blackColor,
                     decoration: InputDecoration(
                       hintText: '  Comment as ${user.username}',
                       border: InputBorder.none,
@@ -108,7 +117,7 @@ class _CommentScreenState extends State<CommentScreen> {
                     user.photoUrl,
                   );
                   setState(() {
-                    _commentController.text = " ";
+                    _commentController.text = "";
                   });
                 },
                 child: Container(
@@ -118,6 +127,7 @@ class _CommentScreenState extends State<CommentScreen> {
                     'Post',
                     style: TextStyle(
                       color: blueColor,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),

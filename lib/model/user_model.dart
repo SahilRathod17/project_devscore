@@ -8,6 +8,7 @@ class User {
   final String bio;
   final List followers;
   final List following;
+  final List community;
 
   const User(
       {required this.email,
@@ -16,7 +17,8 @@ class User {
       required this.username,
       required this.bio,
       required this.followers,
-      required this.following});
+      required this.following,
+      required this.community});
 
   Map<String, dynamic> toJson() => {
         "username": username,
@@ -25,7 +27,8 @@ class User {
         "photoUrl": photoUrl,
         "bio": bio,
         "followers": followers,
-        "following": following
+        "following": following,
+        "community": community,
       };
 
   // doc. snapshot to userdata
@@ -39,6 +42,7 @@ class User {
       bio: snapshot['bio'],
       followers: snapshot['followers'],
       following: snapshot['following'],
+      community: snapshot['community'],
     );
   }
 }

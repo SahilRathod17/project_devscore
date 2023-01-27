@@ -8,7 +8,10 @@ import 'package:project_devscore/screens/login_screen.dart';
 import 'package:project_devscore/services/auth_methods.dart';
 import 'package:project_devscore/services/firestore_methods.dart';
 import 'package:project_devscore/utils/colors.dart';
+import 'package:project_devscore/widgets/buildstatecolumn.dart';
 import 'package:project_devscore/widgets/follow_unfollow.dart';
+import 'package:project_devscore/widgets/log_out_alert.dart';
+import 'package:project_devscore/widgets/post_card.dart';
 import 'package:project_devscore/widgets/snackbar.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -80,19 +83,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: CircularProgressIndicator.adaptive(),
           )
         : Scaffold(
+            backgroundColor: primaryColor,
             appBar: AppBar(
+              iconTheme: const IconThemeData(color: blackColor),
+              leading: IconButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  icon: const Icon(Icons.arrow_back_ios_new_rounded)),
               title: Text(
-                UserData['username'],
+                UserData['username'.trim()],
                 style: const TextStyle(
-                    color: Colors.white, fontFamily: 'kenia', fontSize: 30.0),
+                    color: blackColor, fontFamily: 'kenia', fontSize: 30.0),
               ),
               centerTitle: false,
-              backgroundColor: mobileBackgroundColor,
+              backgroundColor: primaryColor,
               actions: [
                 IconButton(
                   icon: const Icon(
                     Icons.add_circle,
-                    color: Colors.white,
+                    color: Colors.black,
                   ),
                   onPressed: () {
                     Navigator.push(
@@ -140,17 +150,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             widget.uid
                                         ? FollowButton(
                                             text: "Sign Out",
-                                            backgroundColor:
-                                                mobileBackgroundColor,
+                                            backgroundColor: blueColor,
                                             textColor: primaryColor,
                                             borderColor: Colors.grey,
-                                            fun: () async {
-                                              await AuthMethods().SignOut();
-                                              Navigator.of(context)
-                                                  .pushReplacement(
-                                                      MaterialPageRoute(
+                                            fun: () {
+                                              showDialog(
+                                                context: context,
+                                                builder: ((context) {
+                                                  return LogOutAlert(
+                                                    title: 'Logout',
+                                                    content:
+                                                        'Are your sure you want to logout ?',
+                                                    onPressed: () async {
+                                                      await AuthMethods()
+                                                          .SignOut();
+                                                      // ignore: use_build_context_synchronously
+                                                      Navigator.of(context)
+                                                          .pushReplacement(
+                                                        MaterialPageRoute(
                                                           builder: ((context) =>
-                                                              LoginScreen())));
+                                                              LoginScreen()),
+                                                        ),
+                                                      );
+                                                    },
+                                                  );
+                                                }),
+                                              );
                                             },
                                           )
                                         : isFollowing
@@ -158,7 +183,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 text: "Unfollow",
                                                 backgroundColor:
                                                     Colors.transparent,
-                                                textColor: Colors.white54,
+                                                textColor: blackColor,
                                                 borderColor: Colors.grey,
                                                 fun: () async {
                                                   await FireStoreMethods()
@@ -245,9 +270,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           DocumentSnapshot snapH =
                               (snapshot.data! as dynamic).docs[index];
                           return Container(
-                            child: Image(
-                              image: NetworkImage(snapH['photoUrl']),
-                              fit: BoxFit.cover,
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: ((context) => PostCard(
+                                        snap:
+                                            snapshot.data!.docs[index].data())),
+                                  ),
+                                );
+                              },
+                              child: Image(
+                                image: NetworkImage(snapH['photoUrl']),
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           );
                         }),
@@ -257,26 +293,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           );
   }
-}
-
-Column buildStateColumn(int num, String label) {
-  return Column(
-    mainAxisSize: MainAxisSize.min,
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Text(
-        num.toString(),
-        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
-      ),
-      Container(
-        margin: const EdgeInsets.only(top: 4.0),
-        child: Text(
-          label,
-          style: const TextStyle(
-            fontSize: 15,
-          ),
-        ),
-      ),
-    ],
-  );
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:project_devscore/screens/profile_screen.dart';
 import 'package:project_devscore/utils/colors.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:project_devscore/widgets/post_card.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -24,19 +25,25 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: primaryColor,
       appBar: AppBar(
-        backgroundColor: mobileBackgroundColor,
+        elevation: 0,
+        backgroundColor: primaryColor,
         title: TextFormField(
-          cursorColor: Colors.white,
+          cursorColor: blackColor,
           controller: searchController,
           decoration: const InputDecoration(
             border: InputBorder.none,
             labelStyle: TextStyle(
-              color: Colors.white,
+              color: blackColor,
             ),
             labelText: 'Search for a user',
+            hintStyle: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
           ),
           onFieldSubmitted: (String tx) {
+            tx = tx.trim();
             if (tx != null) {
               setState(() {
                 isShowUser = true;
@@ -56,7 +63,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   )
                   .get(),
               builder: (context, snapshot) {
-                if (!snapshot.hasData) {
+                if (!snapshot.hasData && searchController.text != null) {
                   return const Center(
                     child: CircularProgressIndicator(),
                   );
@@ -85,6 +92,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         ),
                         title: Text(
                           (snapshot.data! as dynamic).docs[index]['username'],
+                          style: const TextStyle(color: blackColor),
                         ),
                       ),
                     );
@@ -108,8 +116,18 @@ class _SearchScreenState extends State<SearchScreen> {
                   mainAxisSpacing: 8,
                   crossAxisSpacing: 8,
                   itemCount: (snapshot.data! as dynamic).docs.length,
-                  itemBuilder: (context, index) => Image.network(
-                    (snapshot.data! as dynamic).docs[index]['photoUrl'],
+                  itemBuilder: (context, index) => InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: ((context) => Padding(
+                                padding: const EdgeInsets.only(top: 20),
+                                child: PostCard(
+                                    snap: snapshot.data!.docs[index].data()),
+                              ))));
+                    },
+                    child: Image.network(
+                      (snapshot.data! as dynamic).docs[index]['photoUrl'],
+                    ),
                   ),
                 );
               }),

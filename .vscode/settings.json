@@ -1,5 +1,10 @@
 {
     "java.configuration.updateBuildConfiguration": "interactive",
+    "files.exclude": {
+       "**/*.freezed.dart":false,
+       "**/*.g.dart":false,
+       "**/.gitkeep":false
+    },
     "cSpell.words": [
         "firestore"
     ]

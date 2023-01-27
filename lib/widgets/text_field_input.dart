@@ -20,9 +20,12 @@ class TextFieldInput extends StatelessWidget {
     final InputBorder =
         OutlineInputBorder(borderSide: Divider.createBorderSide(context));
     return TextField(
-      cursorColor: Colors.white,
+      style: TextStyle(color: Colors.black),
+      cursorColor: Colors.black,
       controller: textEditingController,
       decoration: InputDecoration(
+        fillColor: Colors.grey.shade100,
+        hintStyle: TextStyle(color: Colors.black),
         border: InputBorder,
         focusedBorder: InputBorder,
         hintText: hintText,

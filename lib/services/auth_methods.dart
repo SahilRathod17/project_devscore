@@ -49,6 +49,7 @@ class AuthMethods {
           photoUrl: ProfilePicURL,
           followers: [],
           following: [],
+          community: [],
         );
 
         await _firestore.collection('users').doc(cred.user!.uid).set(

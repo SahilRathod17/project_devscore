@@ -59,6 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Container(
@@ -74,6 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Text(
                 'DevsCore',
                 style: TextStyle(
+                    color: blueColor,
                     fontSize: 70.0,
                     fontFamily: 'Festive',
                     fontWeight: FontWeight.w500),
@@ -132,6 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Container(
                     child: const Text(
                       "Don't have an account ?",
+                      style: TextStyle(color: Colors.black),
                     ),
                     padding: const EdgeInsets.symmetric(vertical: 10.0),
                   ),
@@ -146,7 +149,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Container(
                       child: const Text(
                         "  Sign up.",
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: blueColor),
                       ),
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
                     ),

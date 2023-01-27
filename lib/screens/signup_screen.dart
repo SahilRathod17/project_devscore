@@ -1,6 +1,4 @@
 // ignore_for_file: prefer_const_constructors, sort_child_properties_last, prefer_const_literals_to_create_immutables, use_build_context_synchronously, unnecessary_null_comparison
-
-import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -61,15 +59,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
       });
 
       if (result == 'success') {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: ((context) => ResponsiveLayout(
-                  mobileScreenLayout: MobileScreenLayout(),
-                  webScreenLayout: WebScreenLayout(),
-                )),
-          ),
-        );
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: ((context) => ResponsiveLayout(
+        //           mobileScreenLayout: MobileScreenLayout(),
+        //           webScreenLayout: WebScreenLayout(),
+        //         )),
+        //   ),
+        // );
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+                builder: ((context) => ResponsiveLayout(
+                    mobileScreenLayout: MobileScreenLayout(),
+                    webScreenLayout: WebScreenLayout()))),
+            (route) => false);
       } else {
         showSnackBar(context, result.toString());
       }
@@ -82,20 +86,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: blueColor,
       resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: Container(
-          width: double.infinity,
-          padding: EdgeInsets.symmetric(
-            horizontal: 32.0,
-          ),
+      body: Container(
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 60.0),
+        child: SingleChildScrollView(
+          reverse: true,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Flexible(child: Container(), flex: 2),
+              // Flexible(child: Container(), flex: 2),
               Text(
                 'DevsCore',
                 style: TextStyle(
+                    color: Colors.white,
                     fontSize: 70.0,
                     fontFamily: 'Festive',
                     fontWeight: FontWeight.w500),
@@ -118,7 +124,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     left: 50.0,
                     child: IconButton(
                       onPressed: selectImage,
-                      icon: const Icon(Icons.add_a_photo_rounded),
+                      icon: const Icon(
+                        Icons.add_a_photo_rounded,
+                        color: Colors.grey,
+                      ),
                     ),
                   )
                 ],
@@ -163,12 +172,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   child: _isLoading2
                       ? Center(
                           child: const CircularProgressIndicator(
-                            color: Colors.white,
+                            color: Colors.blue,
                           ),
                         )
                       : const Text(
                           'Register',
                           style: TextStyle(
+                            color: blueColor,
                             fontFamily: 'pacifico',
                             fontWeight: FontWeight.w500,
                           ),
@@ -182,55 +192,62 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         Radius.circular(4),
                       ),
                     ),
-                    color: blueColor,
+                    color: Colors.white,
                   ),
                 ),
               ),
               SizedBox(
                 height: 15,
               ),
-              Text(
-                'OR',
-                style: TextStyle(fontFamily: 'pacifico'),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              InkWell(
-                child: Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Sign up with   ',
-                        style:
-                            TextStyle(fontFamily: 'pacifico', fontSize: 18.0),
-                      ),
-                      Icon(EvaIcons.githubOutline),
-                    ],
-                  ),
-                  width: double.infinity,
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.symmetric(vertical: 12.0),
-                  decoration: const ShapeDecoration(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(4),
-                      ),
-                    ),
-                    color: Colors.transparent,
-                  ),
-                ),
-              ),
+              // Text(
+              //   'OR',
+              //   style: TextStyle(color: Colors.white, fontFamily: 'pacifico'),
+              // ),
+              // SizedBox(
+              //   height: 10,
+              // ),
+              // InkWell(
+              //   child: Container(
+              //     child: Row(
+              //       mainAxisAlignment: MainAxisAlignment.center,
+              //       children: [
+              //         Text(
+              //           'Sign up with   ',
+              //           style: TextStyle(
+              //               color: Colors.white,
+              //               fontFamily: 'pacifico',
+              //               fontSize: 18.0),
+              //         ),
+              //         // Icon(
+              //         //   EvaIcons.githubOutline,
+              //         //   color: Colors.white,
+              //         // ),
+              //       ],
+              //     ),
+              //     width: double.infinity,
+              //     alignment: Alignment.center,
+              //     padding: const EdgeInsets.symmetric(vertical: 12.0),
+              //     decoration: const ShapeDecoration(
+              //       shape: RoundedRectangleBorder(
+              //         borderRadius: BorderRadius.all(
+              //           Radius.circular(4),
+              //         ),
+              //       ),
+              //       color: Colors.transparent,
+              //     ),
+              //   ),
+              // ),
               SizedBox(
                 height: 12.0,
               ),
-              Flexible(
-                child: Container(),
-                flex: 2,
-              ),
+              // Flexible(
+              //   child: Container(),
+              //   flex: 12,
+              // ),
             ],
           ),
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         ),
       ),
     );

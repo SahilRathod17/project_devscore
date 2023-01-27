@@ -1,19 +1,53 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:project_devscore/screens/add_post_screen.dart';
+import 'package:project_devscore/screens/drawer_screen.dart';
 import 'package:project_devscore/utils/colors.dart';
 import 'package:project_devscore/utils/global_variables.dart';
 import 'package:project_devscore/widgets/post_card.dart';
+import 'package:project_devscore/widgets/snackbar.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final String uid;
+  const HomeScreen({super.key, required this.uid});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  var UserData = {};
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    getUserData();
+  }
+
+  getUserData() async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      var userSnap = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.uid)
+          .get();
+      UserData = userSnap.data()!;
+    } catch (e) {
+      showSnackBar(
+        context,
+        e.toString(),
+      );
+    }
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -21,15 +55,16 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: width > webScreenSize
           ? null
           : AppBar(
-              backgroundColor: width > webScreenSize
-                  ? webBackgroundColor
-                  : mobileBackgroundColor,
+              iconTheme: const IconThemeData(
+                color: blackColor,
+              ),
+              centerTitle: true,
+              elevation: 0,
+              backgroundColor:
+                  width > webScreenSize ? webBackgroundColor : primaryColor,
               actions: [
                 IconButton(
-                  icon: const Icon(
-                    Icons.add_circle,
-                    color: Colors.white,
-                  ),
+                  icon: const Icon(Icons.add, color: Colors.black, size: 30.0),
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -39,21 +74,27 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                   },
                 ),
-                IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      EvaIcons.messageSquare,
-                      color: Colors.white,
-                    ))
+                // IconButton(
+                //     onPressed: () {},
+                //     icon: const Icon(
+                //       EvaIcons.messageSquare,
+                //       color: Colors.black,
+                //     ))
               ],
               title: const Text(
                 'DevsCore',
                 style: TextStyle(
-                  fontFamily: 'kenia',
+                  color: blueColor,
+                  fontFamily: 'pacifico',
                   fontSize: 35.0,
                 ),
               ),
             ),
+      drawer: isLoading
+          ? const Center(
+              child: CircularProgressIndicator.adaptive(),
+            )
+          : HomePageDrawer(UserData: UserData),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('posts')
@@ -67,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
             );
           }
           return RefreshIndicator(
-            color: Colors.white,
+            color: blueColor,
             onRefresh: _refresh,
             child: ListView.builder(
               // snapshot data can not be null,
