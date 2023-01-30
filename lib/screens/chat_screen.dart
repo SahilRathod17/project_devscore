@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:project_devscore/screens/community_info.dart';
 import 'package:project_devscore/services/user_community.dart';
 import 'package:project_devscore/utils/colors.dart';
+import 'package:project_devscore/widgets/message.dart';
 
 class ChatPage extends StatefulWidget {
   final String communityId;
@@ -21,6 +22,7 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   Stream<QuerySnapshot>? chats;
+  TextEditingController messageController = TextEditingController();
   String admin = "";
 
   @override
@@ -62,6 +64,7 @@ class _ChatPageState extends State<ChatPage> {
                     CommunityId: widget.communityId,
                     CommunityName: widget.communityName,
                     adminName: admin,
+                    username: widget.username,
                   );
                 })));
               },
@@ -79,6 +82,97 @@ class _ChatPageState extends State<ChatPage> {
             },
             icon: const Icon(Icons.arrow_back_ios_new_rounded)),
       ),
+      body: Stack(children: [
+        ChatMessages(),
+        Container(
+          alignment: Alignment.bottomCenter,
+          width: MediaQuery.of(context).size.width,
+          child: ClipRRect(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(30),
+              topRight: Radius.circular(30),
+            ),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              color: Colors.grey[200],
+              child: Row(
+                children: [
+                  Expanded(
+                      child: TextFormField(
+                    controller: messageController,
+                    style: const TextStyle(color: blackColor),
+                    decoration: const InputDecoration(
+                      hintText: "Send a message . . .",
+                      hintStyle: TextStyle(
+                        color: blackColor,
+                        fontSize: 16,
+                      ),
+                      border: InputBorder.none,
+                    ),
+                  )),
+                  const SizedBox(
+                    width: 12,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      sendMessage();
+                    },
+                    child: Container(
+                      height: 50,
+                      width: 50,
+                      decoration: BoxDecoration(
+                        // color: Theme.of(context).primaryColor,
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: const Center(
+                        child: Icon(
+                          Icons.send,
+                          color: blackColor,
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      ]),
     );
+  }
+
+  ChatMessages() {
+    return StreamBuilder(
+      stream: chats,
+      builder: (context, snapshot) {
+        return snapshot.hasData
+            ? ListView.builder(
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (context, index) {
+                  return MessageTile(
+                      message: snapshot.data!.docs[index]['message'],
+                      sender: snapshot.data!.docs[index]['sender'],
+                      sentByMe: widget.username ==
+                          snapshot.data!.docs[index]['sender']);
+                },
+              )
+            : Container();
+      },
+    );
+  }
+
+  sendMessage() {
+    if (messageController.text.isNotEmpty) {
+      Map<String, dynamic> chatMessageMap = {
+        "message": messageController.text,
+        "sender": widget.username,
+        "time": DateTime.now().millisecondsSinceEpoch,
+      };
+
+      CommunityService().sendMessage(widget.communityId, chatMessageMap);
+      setState(() {
+        messageController.clear();
+      });
+    }
   }
 }

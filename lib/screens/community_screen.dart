@@ -3,7 +3,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:project_devscore/screens/drawer_screen.dart';
 import 'package:project_devscore/services/user_community.dart';
 import 'package:project_devscore/utils/colors.dart';
 import 'package:project_devscore/utils/string_manipulation.dart';

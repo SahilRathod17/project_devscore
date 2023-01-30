@@ -13,7 +13,9 @@ List<Widget> homeScreenItems = [
   HomeScreen(
     uid: FirebaseAuth.instance.currentUser!.uid,
   ),
-  const SearchScreen(),
+  SearchScreen(
+    uid: FirebaseAuth.instance.currentUser!.uid,
+  ),
   ProviderScope(child: GitHubWidget()),
   CommunityScreen(
     uid: FirebaseAuth.instance.currentUser!.uid,

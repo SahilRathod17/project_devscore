@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:project_devscore/screens/login_screen.dart';
-import 'package:project_devscore/services/auth_methods.dart';
 import 'package:project_devscore/widgets/log_out_button.dart';
 
 class LogOutAlert extends StatelessWidget {

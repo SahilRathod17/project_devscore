@@ -26,6 +26,10 @@ Future<void> main() async {
         storageBucket: 'devscore-451ea.appspot.com',
       ),
     );
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarIconBrightness: Brightness.dark,
+      statusBarBrightness: Brightness.light,
+    ));
   } else {
     await Firebase.initializeApp();
   }

@@ -1,6 +1,7 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:project_devscore/screens/community_screen.dart';
 import 'package:project_devscore/services/user_community.dart';
 import 'package:project_devscore/utils/colors.dart';
 import 'package:project_devscore/utils/string_manipulation.dart';
@@ -10,11 +11,13 @@ class CommunityInfo extends StatefulWidget {
   final String CommunityId;
   final String CommunityName;
   final String adminName;
+  final String username;
 
   CommunityInfo({
     required this.CommunityId,
     required this.CommunityName,
     required this.adminName,
+    required this.username,
   });
 
   @override
@@ -66,10 +69,15 @@ class _CommunityInfoState extends State<CommunityInfo> {
                   context: context,
                   builder: ((context) {
                     return LogOutAlert(
-                      title: 'Leave Community',
-                      content: 'Are your sure you want to leave ?',
-                      onPressed: () {},
-                    );
+                        title: 'Leave Community',
+                        content: 'Are your sure you want to leave ?',
+                        onPressed: () {
+                          CommunityService().leavecommunity(widget.CommunityId,
+                              widget.username, widget.CommunityName);
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                        });
                   }),
                 );
               },
